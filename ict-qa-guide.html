@@ -1,0 +1,1319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ICT Comprehensive Q&A Guide</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Serif:ital,wght@0,400;0,600;1,400&display=swap');
+
+  :root {
+    --bg: #0f1117;
+    --surface: #181c27;
+    --surface2: #1e2333;
+    --border: #2a3050;
+    --accent: #4f8ef7;
+    --accent2: #7c3aed;
+    --accent3: #10b981;
+    --accent4: #f59e0b;
+    --accent5: #ef4444;
+    --text: #e2e8f0;
+    --muted: #7c8db5;
+    --heading: #f8fafc;
+    --tag-bg: #1e2d50;
+    --tag-text: #93c5fd;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 15px;
+    line-height: 1.7;
+    min-height: 100vh;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: linear-gradient(135deg, #0f1117 0%, #1a1f35 50%, #0f1117 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 48px 24px 40px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 60% 40% at 50% 0%, rgba(79,142,247,0.12) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .header-eyebrow {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 16px;
+  }
+  header h1 {
+    font-family: 'IBM Plex Serif', serif;
+    font-size: clamp(28px, 5vw, 48px);
+    font-weight: 600;
+    color: var(--heading);
+    line-height: 1.2;
+    margin-bottom: 12px;
+  }
+  header p {
+    color: var(--muted);
+    font-size: 15px;
+    max-width: 480px;
+    margin: 0 auto;
+  }
+
+  /* ── NAV ── */
+  nav {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 0 24px;
+    display: flex;
+    gap: 4px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  nav::-webkit-scrollbar { display: none; }
+  .nav-btn {
+    background: none;
+    border: none;
+    color: var(--muted);
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 13px;
+    padding: 14px 16px;
+    cursor: pointer;
+    white-space: nowrap;
+    border-bottom: 2px solid transparent;
+    transition: color 0.2s, border-color 0.2s;
+    position: relative;
+  }
+  .nav-btn:hover { color: var(--text); }
+  .nav-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+  /* ── LAYOUT ── */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 40px 24px 80px;
+  }
+
+  .section { display: none; }
+  .section.active { display: block; }
+
+  /* ── SECTION HEADER ── */
+  .section-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 40px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--border);
+  }
+  .section-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    flex-shrink: 0;
+  }
+  .section-header h2 {
+    font-family: 'IBM Plex Serif', serif;
+    font-size: 26px;
+    font-weight: 600;
+    color: var(--heading);
+    line-height: 1.2;
+    margin-bottom: 4px;
+  }
+  .section-header p { color: var(--muted); font-size: 14px; }
+
+  /* ── QUESTION CARD ── */
+  .q-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    margin-bottom: 24px;
+    overflow: hidden;
+  }
+  .q-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 18px 20px;
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.15s;
+  }
+  .q-header:hover { background: var(--surface2); }
+  .q-num {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--accent);
+    background: rgba(79,142,247,0.1);
+    padding: 3px 8px;
+    border-radius: 4px;
+    flex-shrink: 0;
+    letter-spacing: 0.05em;
+  }
+  .q-title {
+    font-weight: 500;
+    color: var(--heading);
+    font-size: 14px;
+    flex: 1;
+  }
+  .q-chevron {
+    color: var(--muted);
+    font-size: 12px;
+    transition: transform 0.25s;
+    flex-shrink: 0;
+  }
+  .q-card.open .q-chevron { transform: rotate(180deg); }
+  .q-body {
+    display: none;
+    padding: 0 20px 20px;
+    border-top: 1px solid var(--border);
+  }
+  .q-card.open .q-body { display: block; }
+
+  /* ── ANSWER PARTS ── */
+  .part {
+    margin-top: 20px;
+  }
+  .part-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent3);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .part-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+  .part p { color: var(--text); margin-bottom: 8px; font-size: 14px; }
+  .part p:last-child { margin-bottom: 0; }
+
+  /* ── TABLES ── */
+  .tbl-wrap { overflow-x: auto; margin: 12px 0; }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    min-width: 400px;
+  }
+  th {
+    background: var(--surface2);
+    color: var(--accent);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 10px 14px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+  }
+  td {
+    padding: 9px 14px;
+    border-bottom: 1px solid rgba(42,48,80,0.5);
+    color: var(--text);
+    vertical-align: top;
+  }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: rgba(255,255,255,0.02); }
+
+  /* ── CODE / GANTT ── */
+  pre, code {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+  }
+  pre {
+    background: #0a0d14;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px 16px;
+    overflow-x: auto;
+    color: #a5f3c8;
+    margin: 12px 0;
+    line-height: 1.6;
+  }
+  .sql-keyword { color: #7c9eff; }
+  .sql-string  { color: #f9a875; }
+  .sql-symbol  { color: #f472b6; }
+
+  /* ── HIGHLIGHT BOX ── */
+  .highlight {
+    background: rgba(79,142,247,0.08);
+    border-left: 3px solid var(--accent);
+    border-radius: 0 8px 8px 0;
+    padding: 12px 16px;
+    margin: 12px 0;
+    font-size: 14px;
+  }
+  .highlight.green {
+    background: rgba(16,185,129,0.08);
+    border-left-color: var(--accent3);
+  }
+  .highlight.amber {
+    background: rgba(245,158,11,0.08);
+    border-left-color: var(--accent4);
+  }
+  .highlight.purple {
+    background: rgba(124,58,237,0.08);
+    border-left-color: var(--accent2);
+  }
+
+  /* ── BADGE ── */
+  .badge {
+    display: inline-block;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-weight: 600;
+    margin: 2px;
+  }
+  .badge-blue { background: rgba(79,142,247,0.15); color: #93c5fd; }
+  .badge-green { background: rgba(16,185,129,0.15); color: #6ee7b7; }
+  .badge-amber { background: rgba(245,158,11,0.15); color: #fcd34d; }
+  .badge-purple { background: rgba(124,58,237,0.15); color: #c4b5fd; }
+  .badge-red { background: rgba(239,68,68,0.15); color: #fca5a5; }
+
+  ul.styled { list-style: none; padding: 0; }
+  ul.styled li {
+    padding: 6px 0 6px 20px;
+    position: relative;
+    font-size: 14px;
+    color: var(--text);
+    border-bottom: 1px solid rgba(42,48,80,0.4);
+  }
+  ul.styled li:last-child { border-bottom: none; }
+  ul.styled li::before {
+    content: '▸';
+    position: absolute;
+    left: 0;
+    color: var(--accent);
+  }
+
+  .marks-tag {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    background: var(--surface2);
+    padding: 2px 7px;
+    border-radius: 3px;
+    margin-left: 8px;
+  }
+
+  /* ── GANTT ── */
+  .gantt-wrap { overflow-x: auto; margin: 12px 0; }
+  .gantt {
+    display: flex;
+    align-items: stretch;
+    min-width: 500px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .gantt-cell {
+    padding: 14px 8px;
+    text-align: center;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    font-weight: 600;
+    border-right: 1px solid var(--border);
+    flex: 1;
+    position: relative;
+  }
+  .gantt-cell:last-child { border-right: none; }
+  .gantt-cell span {
+    display: block;
+    font-size: 10px;
+    font-weight: 400;
+    color: var(--muted);
+    margin-top: 4px;
+  }
+  .gc-p1 { background: rgba(79,142,247,0.15); color: #93c5fd; }
+  .gc-p2 { background: rgba(124,58,237,0.15); color: #c4b5fd; }
+  .gc-p3 { background: rgba(16,185,129,0.15); color: #6ee7b7; }
+  .gc-p4 { background: rgba(245,158,11,0.15); color: #fcd34d; }
+
+  .result-box {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin: 12px 0;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    color: var(--accent3);
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    text-align: center;
+    padding: 32px;
+    color: var(--muted);
+    font-size: 12px;
+    border-top: 1px solid var(--border);
+    font-family: 'IBM Plex Mono', monospace;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-eyebrow">Professional Instructor's Model Answers</div>
+  <h1>ICT Comprehensive Q&amp;A Guide</h1>
+  <p>Database Systems · OS Scheduling · SDLC · Cloud Computing · Virtualization · AR/VR · IoT · AI Ethics</p>
+</header>
+
+<nav>
+  <button class="nav-btn active" onclick="show('db', this)">🗄 Database</button>
+  <button class="nav-btn" onclick="show('os', this)">⏱ OS Scheduling</button>
+  <button class="nav-btn" onclick="show('sdlc', this)">🔄 SDLC</button>
+  <button class="nav-btn" onclick="show('cloud', this)">☁ Cloud</button>
+  <button class="nav-btn" onclick="show('virt', this)">💻 Virt &amp; Security</button>
+  <button class="nav-btn" onclick="show('arvr', this)">🥽 AR &amp; VR</button>
+  <button class="nav-btn" onclick="show('iot', this)">📡 IoT</button>
+  <button class="nav-btn" onclick="show('ai', this)">🤖 AI Ethics</button>
+</nav>
+
+<main>
+
+<!-- ═══════════════════════════════════ DATABASE ═══════════════════════════════════ -->
+<div id="db" class="section active">
+  <div class="section-header">
+    <div class="section-icon" style="background:rgba(79,142,247,0.12)">🗄</div>
+    <div>
+      <h2>Database Systems</h2>
+      <p>DDL/DML, Data Redundancy, SQL Queries, File-Processing Limitations</p>
+    </div>
+  </div>
+
+  <!-- Q1 -->
+  <div class="q-card open">
+    <div class="q-header" onclick="toggle(this)">
+      <span class="q-num">Q1</span>
+      <span class="q-title">Hospital patient records in separate Excel files — redundancy, DDL/DML, SQL</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="q-body">
+      <div class="part">
+        <div class="part-label">(a) Two Problems from Data Redundancy &amp; Inconsistency <span class="marks-tag">2 Marks</span></div>
+        <p><strong>1. Wasted Storage &amp; Update Anomalies:</strong> When patient data (e.g., address) is stored in both the billing file and the records file, updating one without the other creates conflicting information. A doctor may bill the wrong address while records show the correct one.</p>
+        <p><strong>2. Poor Decision-Making:</strong> If a patient's diagnosis is updated in one file but not another, a doctor reviewing the outdated file may prescribe incorrect treatment — a potentially life-threatening consequence.</p>
+      </div>
+      <div class="part">
+        <div class="part-label">(b) DDL vs DML <span class="marks-tag">2 Marks</span></div>
+        <div class="tbl-wrap"><table>
+          <tr><th>Feature</th><th>DDL</th><th>DML</th></tr>
+          <tr><td>Full Form</td><td>Data Definition Language</td><td>Data Manipulation Language</td></tr>
+          <tr><td>Purpose</td><td>Defines / modifies database structure</td><td>Manipulates data within tables</td></tr>
+          <tr><td>Acts On</td><td>Schema / Structure</td><td>Records / Data</td></tr>
+          <tr><td>Auto-commit</td><td>Yes</td><td>No (can be rolled back)</td></tr>
+        </table></div>
+        <pre><span class="sql-keyword">-- DDL Example</span>
+<span class="sql-keyword">CREATE TABLE</span> Patients (
+    PatientID <span class="sql-keyword">INT PRIMARY KEY</span>,
+    Name <span class="sql-keyword">VARCHAR</span>(100),
+    Age <span class="sql-keyword">INT</span>
+);
+
+<span class="sql-keyword">-- DML Example</span>
+<span class="sql-keyword">INSERT INTO</span> Patients <span class="sql-keyword">VALUES</span> (1, <span class="sql-string">'Ali Ahmed'</span>, 55);</pre>
+      </div>
+      <div class="part">
+        <div class="part-label">(c) SQL Query — Patients older than 50 <span class="marks-tag">1 Mark</span></div>
+        <pre><span class="sql-keyword">SELECT</span> * <span class="sql-keyword">FROM</span> Patients <span class="sql-keyword">WHERE</span> Age <span class="sql-symbol">&gt;</span> 50;</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q2 -->
+  <div class="q-card">
+    <div class="q-header" onclick="toggle(this)">
+      <span class="q-num">Q2</span>
+      <span class="q-title">Retail store with spreadsheets — file-processing limitations, DDL/DML roles, SQL</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="q-body">
+      <div class="part">
+        <div class="part-label">(a) Two Limitations of File-Processing Systems <span class="marks-tag">2 Marks</span></div>
+        <p><strong>1. Data Isolation:</strong> Data is scattered across files in different formats, making it difficult to access related information simultaneously (e.g., linking customer records to sales).</p>
+        <p><strong>2. Lack of Concurrent Access Control:</strong> Multiple users accessing and modifying files simultaneously can cause data corruption or loss of updates.</p>
+      </div>
+      <div class="part">
+        <div class="part-label">(b) Role of DDL and DML in RDBMS <span class="marks-tag">2 Marks</span></div>
+        <p><strong>DDL Role:</strong> Used by database administrators to create and modify the structure of the database — defining tables, columns, data types, and constraints using commands like CREATE, ALTER, DROP.</p>
+        <p><strong>DML Role:</strong> Used by users and applications to interact with data stored in the database — inserting, retrieving, updating, and deleting records using SELECT, INSERT, UPDATE, DELETE.</p>
+      </div>
+      <div class="part">
+        <div class="part-label">(c) SQL Query — Products priced above 1000 <span class="marks-tag">1 Mark</span></div>
+        <pre><span class="sql-keyword">SELECT</span> * <span class="sql-keyword">FROM</span> Products <span class="sql-keyword">WHERE</span> Price <span class="sql-symbol">&gt;</span> 1000;</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q3 -->
+  <div class="q-card">
+    <div class="q-header" onclick="toggle(this)">
+      <span class="q-num">Q3</span>
+      <span class="q-title">College attendance &amp; grades in separate files — redundancy &amp; decision-making</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="q-body">
+      <div class="part">
+        <div class="part-label">(a) How Redundancy &amp; Inconsistency Affect Decision-Making <span class="marks-tag">2 Marks</span></div>
+        <p><strong>Redundancy:</strong> When student fee records exist in both the finance and registrar files, management may issue wrong financial aid decisions if one file is out of date — leading to wrong resource allocation.</p>
+        <p><strong>Inconsistency:</strong> If a student's grade is updated in the exam department file but not the academic records file, management may wrongly identify a student as failing and refuse enrollment — damaging student outcomes.</p>
+      </div>
+      <div class="part">
+        <div class="part-label">(b) DDL vs DML Commands <span class="marks-tag">2 Marks</span></div>
+        <div class="highlight">DDL commands <strong>define structure</strong> (CREATE, ALTER, DROP, TRUNCATE). DML commands <strong>manipulate data</strong> (SELECT, INSERT, UPDATE, DELETE). DDL changes are auto-committed; DML changes can be rolled back.</div>
+      </div>
+      <div class="part">
+        <div class="part-label">(c) SQL Query — Students in BBA program <span class="marks-tag">1 Mark</span></div>
+        <pre><span class="sql-keyword">SELECT</span> * <span class="sql-keyword">FROM</span> Students <span class="sql-keyword">WHERE</span> Program <span class="sql-symbol">=</span> <span class="sql-string">'BBA'</span>;</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q4 -->
+  <div class="q-card">
+    <div class="q-header" onclick="toggle(this)">
+      <span class="q-num">Q4</span>
+      <span class="q-title">College student records — redundancy problems, DDL/DML with examples, GPA query</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="q-body">
+      <div class="part">
+        <div class="part-label">(a) Two Problems — Redundancy &amp; Inconsistency</div>
+        <p><strong>Redundancy:</strong> The same student name and address stored in attendance, results, and billing files wastes storage and forces staff to update the same information in multiple places.</p>
+        <p><strong>Inconsistency:</strong> A student's address updated in billing but not attendance leads to conflicting records — reports and notifications go to different addresses, causing administrative errors.</p>
+      </div>
+      <div class="part">
+        <div class="part-label">(b) DDL vs DML with Examples</div>
+        <pre><span class="sql-keyword">-- DDL: Creates table structure</span>
+<span class="sql-keyword">CREATE TABLE</span> Students (
+    StudentID <span class="sql-keyword">INT PRIMARY KEY</span>,
+    Name <span class="sql-keyword">VARCHAR</span>(50),
+    GPA <span class="sql-keyword">DECIMAL</span>(3,2)
+);
+
+<span class="sql-keyword">-- DML: Inserts a record</span>
+<span class="sql-keyword">INSERT INTO</span> Students <span class="sql-keyword">VALUES</span> (101, <span class="sql-string">'Sara Khan'</span>, 3.7);</pre>
+      </div>
+      <div class="part">
+        <div class="part-label">(c) SQL Query — Students with GPA &gt; 3.0</div>
+        <pre><span class="sql-keyword">SELECT</span> * <span class="sql-keyword">FROM</span> Students <span class="sql-keyword">WHERE</span> GPA <span class="sql-symbol">&gt;</span> 3.0;</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q5 -->
+  <div class="q-card">
+    <div class="q-header" onclick="toggle(this)">
+      <span class="q-num">Q5</span>
+      <span class="q-title">Hospital spreadsheets — file-based limitations, CREATE vs INSERT, elderly patients query</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="q-body">
+      <div class="part">
+        <div class="part-label">(a) Two Limitations of File-Based Systems</div>
+        <p><strong>1. No Security Enforcement:</strong> File systems offer no fine-grained access control — a ward clerk can open the same file containing confidential doctor notes and billing details.</p>
+        <p><strong>2. Difficulty in Data Sharing:</strong> Files created by one department (e.g., Excel by billing) are often incompatible with files used by another (e.g., CSV by pharmacy), making integration complex and error-prone.</p>
+      </div>
+      <div class="part">
+        <div class="part-label">(b) CREATE vs INSERT</div>
+        <div class="tbl-wrap"><table>
+          <tr><th>Command</th><th>Type</th><th>Purpose</th></tr>
+          <tr><td>CREATE</td><td>DDL</td><td>Creates the table structure — defines columns and data types</td></tr>
+          <tr><td>INSERT</td><td>DML</td><td>Adds actual data records into an existing table</td></tr>
+        </table></div>
+        <pre><span class="sql-keyword">CREATE TABLE</span> Patients (ID <span class="sql-keyword">INT</span>, Name <span class="sql-keyword">VARCHAR</span>(50), Age <span class="sql-keyword">INT</span>);
+<span class="sql-keyword">INSERT INTO</span> Patients <span class="sql-keyword">VALUES</span> (1, <span class="sql-string">'Sara Khan'</span>, 65);</pre>
+      </div>
+      <div class="part">
+        <div class="part-label">(c) SQL Query — Patients older than 60</div>
+        <pre><span class="sql-keyword">SELECT</span> * <span class="sql-keyword">FROM</span> Patients <span class="sql-keyword">WHERE</span> Age <span class="sql-symbol">&gt;</span> 60;</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q6 -->
+  <div class="q-card">
+    <div class="q-header" onclick="toggle(this)">
+      <span class="q-num">Q6</span>
+      <span class="q-title">Company employee files — duplicate data issues, DDL/DML comparison, salary query</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="q-body">
+      <div class="part">
+        <div class="part-label">(a) Issues Related to Duplicate Data</div>
+        <p><strong>Storage Waste:</strong> The same employee record stored in HR, payroll, and project management files consumes redundant storage space unnecessarily.</p>
+        <p><strong>Update Anomaly:</strong> When an employee gets a salary raise, if payroll updates its file but HR does not, two different salary figures exist — the employee may be paid incorrectly.</p>
+      </div>
+      <div class="part">
+        <div class="part-label">(b) DDL vs DML Commands</div>
+        <div class="tbl-wrap"><table>
+          <tr><th>Basis</th><th>DDL</th><th>DML</th></tr>
+          <tr><td>Purpose</td><td>Defines structure</td><td>Manages data</td></tr>
+          <tr><td>Commands</td><td>CREATE, ALTER, DROP</td><td>SELECT, INSERT, UPDATE, DELETE</td></tr>
+          <tr><td>Rollback</td><td>Not possible (auto-commit)</td><td>Possible (transactional)</td></tr>
+          <tr><td>Affects</td><td>Schema</td><td>Rows/Records</td></tr>
+        </table></div>
+      </div>
+      <div class="part">
+        <div class="part-label">(c) SQL Query — Employees earning more than $50,000</div>
+        <pre><span class="sql-keyword">SELECT</span> * <span class="sql-keyword">FROM</span> Employees <span class="sql-keyword">WHERE</span> Salary <span class="sql-symbol">&gt;</span> 50000;</pre>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════ OS SCHEDULING ═══════════════════════════════════ -->
+<div id="os" class="section">
+  <div class="section-header">
+    <div class="section-icon" style="background:rgba(124,58,237,0.12)">⏱</div>
+    <div>
+      <h2>OS Scheduling — FCFS</h2>
+      <p>Gantt Charts · Waiting Times · Average Waiting Time · CPU Objectives</p>
+    </div>
+  </div>
+
+  <div class="highlight purple" style="margin-bottom:24px">
+    <strong>Key Formulas:</strong><br>
+    Waiting Time = Start Time − Arrival Time &nbsp;|&nbsp; Turnaround Time = Finish Time − Arrival Time<br>
+    Average Waiting Time = Total Waiting Time ÷ Number of Processes
+  </div>
+
+  <!-- Q1 -->
+  <div class="q-card open">
+    <div class="q-header" onclick="toggle(this)">
+      <span class="q-num">Q1</span>
+      <span class="q-title">P1=10ms, P2=6ms, P3=4ms — FCFS Gantt, waiting times, average</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="q-body">
+      <div class="part">
+        <div class="part-label">1. Gantt Chart</div>
+        <div class="gantt-wrap"><div class="gantt">
+          <div class="gantt-cell gc-p1">P1<span>0 → 10</span></div>
+          <div class="gantt-cell gc-p2">P2<span>10 → 16</span></div>
+          <div class="gantt-cell gc-p3">P3<span>16 → 20</span></div>
+        </div></div>
+      </div>
+      <div class="part">
+        <div class="part-label">2. Waiting Times</div>
+        <div class="tbl-wrap"><table>
+          <tr><th>Process</th><th>Burst</th><th>Start</th><th>Finish</th><th>Waiting Time</th></tr>
+          <tr><td>P1</td><td>10</td><td>0</td><td>10</td><td>0 ms</td></tr>
+          <tr><td>P2</td><td>6</td><td>10</td><td>16</td><td>10 ms</td></tr>
+          <tr><td>P3</td><td>4</td><td>16</td><td>20</td><td>16 ms</td></tr>
+        </table></div>
+      </div>
+      <div class="part">
+        <div class="part-label">3. Average Waiting Time</div>
+        <div class="result-box">AVG = (0 + 10 + 16) ÷ 3 = 26 ÷ 3 ≈ 8.67 ms</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q2 -->
+  <div class="q-card">
+    <div class="q-header" onclick="toggle(this)">
+      <span class="q-num">Q2</span>
+      <span class="q-title">J1=8ms, J2=3ms, J3=5ms — Print jobs FCFS timeline</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="q-body">
+      <div class="part">
+        <div class="part-label">1. Execution Timeline</div>
+        <div class="gantt-wrap"><div class="gantt">
+          <div class="gantt-cell gc-p1">J1<span>0 → 8</span></div>
+          <div class="gantt-cell gc-p2">J2<span>8 → 11</span></div>
+          <div class="gantt-cell gc-p3">J3<span>11 → 16</span></div>
+        </div></div>
+      </div>
+      <div class="part">
+        <div class="part-label">2. Individual Waiting Times</div>
+        <div class="tbl-wrap"><table>
+          <tr><th>Job</th><th>Burst</th><th>Waiting Time</th></tr>
+          <tr><td>J1</td><td>8 ms</td><td>0 ms</td></tr>
+          <tr><td>J2</td><td>3 ms</td><td>8 ms</td></tr>
+          <tr><td>J3</td><td>5 ms</td><td>11 ms</td></tr>
+        </table></div>
+      </div>
+      <div class="part">
+        <div class="part-label">3. Average Waiting Time</div>
+        <div class="result-box">AVG = (0 + 8 + 11) ÷ 3 = 19 ÷ 3 ≈ 6.33 ms</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q3 -->
+  <div class="q-card">
+    <div class="q-header" onclick="toggle(this)">
+      <span class="q-num">Q3</span>
+      <span class="q-title">P1=15ms, P2=5ms, P3=10ms — OS processes FCFS</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="q-body">
+      <div class="part">
+        <div class="part-label">1. Gantt Chart</div>
+        <div class="gantt-wrap"><div class="gantt">
+          <div class="gantt-cell gc-p1" style="flex:3">P1<span>0 → 15</span></div>
+          <div class="gantt-cell gc-p2">P2<span>15 → 20</span></div>
+          <div class="gantt-cell gc-p3" style="flex:2">P3<span>20 → 30</span></div>
+        </div></div>
+      </div>
+      <div class="part">
+        <div class="part-label">2. Waiting Times</div>
+        <div class="tbl-wrap"><table>
+          <tr><th>Process</th><th>Burst</th><th>Waiting Time</th></tr>
+          <tr><td>P1</td><td>15 ms</td><td>0 ms</td></tr>
+          <tr><td>P2</td><td>5 ms</td><td>15 ms</td></tr>
+          <tr><td>P3</td><td>10 ms</td><td>20 ms</td></tr>
+        </table></div>
+      </div>
+      <div class="part">
+        <div class="part-label">3. Average Waiting Time</div>
+        <div class="result-box">AVG = (0 + 15 + 20) ÷ 3 = 35 ÷ 3 ≈ 11.67 ms</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q4 -->
+  <div class="q-card">
+    <div class="q-header" onclick="toggle(this)">
+      <span class="q-num">Q4</span>
+      <span class="q-title">P1=5ms, P2=3ms, P3=7ms — Gantt, waiting, average</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="q-body">
+      <div class="part">
+        <div class="part-label">Gantt Chart</div>
+        <div class="gantt-wrap"><div class="gantt">
+          <div class="gantt-cell gc-p1">P1<span>0 → 5</span></div>
+          <div class="gantt-cell gc-p2">P2<span>5 → 8</span></div>
+          <div class="gantt-cell gc-p3" style="flex:1.4">P3<span>8 → 15</span></div>
+        </div></div>
+      </div>
+      <div class="part">
+        <div class="part-label">Waiting Times &amp; Average</div>
+        <div class="tbl-wrap"><table>
+          <tr><th>Process</th><th>Burst</th><th>Waiting Time</th></tr>
+          <tr><td>P1</td><td>5 ms</td><td>0 ms</td></tr>
+          <tr><td>P2</td><td>3 ms</td><td>5 ms</td></tr>
+          <tr><td>P3</td><td>7 ms</td><td>8 ms</td></tr>
+        </table></div>
+        <div class="result-box">AVG = (0 + 5 + 8) ÷ 3 = 13 ÷ 3 ≈ 4.33 ms</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q5 -->
+  <div class="q-card">
+    <div class="q-header" onclick="toggle(this)">
+      <span class="q-num">Q5</span>
+      <span class="q-title">CPU Scheduling Objectives + P1=8ms, P2=2ms, P3=4ms FCFS</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="q-body">
+      <div class="part">
+        <div class="part-label">Objectives of CPU Scheduling</div>
+        <div class="tbl-wrap"><table>
+          <tr><th>Objective</th><th>Explanation</th></tr>
+          <tr><td><span class="badge badge-blue">CPU Utilization</span></td><td>Keep the CPU busy as much as possible — target 90–100% to avoid idle time</td></tr>
+          <tr><td><span class="badge badge-green">Turnaround Time</span></td><td>Minimize total time from process submission to completion</td></tr>
+          <tr><td><span class="badge badge-amber">Throughput</span></td><td>Maximize number of processes completed per unit time</td></tr>
+        </table></div>
+      </div>
+      <div class="part">
+        <div class="part-label">FCFS Solution — P1=8, P2=2, P3=4</div>
+        <div class="gantt-wrap"><div class="gantt">
+          <div class="gantt-cell gc-p1" style="flex:2">P1<span>0 → 8</span></div>
+          <div class="gantt-cell gc-p2">P2<span>8 → 10</span></div>
+          <div class="gantt-cell gc-p3">P3<span>10 → 14</span></div>
+        </div></div>
+        <div class="tbl-wrap"><table>
+          <tr><th>Process</th><th>Burst</th><th>Waiting Time</th></tr>
+          <tr><td>P1</td><td>8 ms</td><td>0 ms</td></tr>
+          <tr><td>P2</td><td>2 ms</td><td>8 ms</td></tr>
+          <tr><td>P3</td><td>4 ms</td><td>10 ms</td></tr>
+        </table></div>
+        <div class="result-box">AVG = (0 + 8 + 10) ÷ 3 = 18 ÷ 3 = 6.00 ms</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q6 -->
+  <div class="q-card">
+    <div class="q-header" onclick="toggle(this)">
+      <span class="q-num">Q6</span>
+      <span class="q-title">P1=6ms, P2=2ms, P3=1ms, P4=3ms — Four process FCFS</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="q-body">
+      <div class="part">
+        <div class="part-label">Execution Timeline</div>
+        <div class="gantt-wrap"><div class="gantt">
+          <div class="gantt-cell gc-p1" style="flex:2">P1<span>0 → 6</span></div>
+          <div class="gantt-cell gc-p2">P2<span>6 → 8</span></div>
+          <div class="gantt-cell gc-p3" style="flex:0.5">P3<span>8→9</span></div>
+          <div class="gantt-cell gc-p4">P4<span>9 → 12</span></div>
+        </div></div>
+      </div>
+      <div class="part">
+        <div class="part-label">Waiting Times &amp; Average</div>
+        <div class="tbl-wrap"><table>
+          <tr><th>Process</th><th>Burst</th><th>Waiting Time</th></tr>
+          <tr><td>P1</td><td>6 ms</td><td>0 ms</td></tr>
+          <tr><td>P2</td><td>2 ms</td><td>6 ms</td></tr>
+          <tr><td>P3</td><td>1 ms</td><td>8 ms</td></tr>
+          <tr><td>P4</td><td>3 ms</td><td>9 ms</td></tr>
+        </table></div>
+        <div class="result-box">AVG = (0 + 6 + 8 + 9) ÷ 4 = 23 ÷ 4 = 5.75 ms</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════ SDLC ═══════════════════════════════════ -->
+<div id="sdlc" class="section">
+  <div class="section-header">
+    <div class="section-icon" style="background:rgba(16,185,129,0.12)">🔄</div>
+    <div>
+      <h2>Software Development Life Cycle</h2>
+      <p>Phases · Deliverables · Agile vs Waterfall</p>
+    </div>
+  </div>
+
+  <div class="q-card open">
+    <div class="q-header" onclick="toggle(this)">
+      <span class="q-num">Q1</span>
+      <span class="q-title">Online Food Delivery System — 4 SDLC phases, Agile vs Waterfall</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="q-body">
+      <div class="part">
+        <div class="part-label">(a) Four SDLC Phases with Deliverables <span class="marks-tag">3 Marks</span></div>
+        <div class="tbl-wrap"><table>
+          <tr><th>Phase</th><th>Key Activities</th><th>Deliverable</th></tr>
+          <tr><td><span class="badge badge-blue">Requirement Analysis</span></td><td>Gather client needs; identify users (customers, riders, restaurants); define functional &amp; non-functional requirements</td><td>Software Requirements Specification (SRS)</td></tr>
+          <tr><td><span class="badge badge-purple">Design</span></td><td>Database schema design, UI wireframes, system architecture, API structure planning</td><td>System Design Document / Prototypes</td></tr>
+          <tr><td><span class="badge badge-green">Development</span></td><td>Programmers write code for ordering, payment, and tracking modules</td><td>Source Code / Working Modules</td></tr>
+          <tr><td><span class="badge badge-amber">Testing</span></td><td>Unit testing, integration testing, UAT; identify and fix bugs</td><td>Test Reports / Bug Logs</td></tr>
+        </table></div>
+      </div>
+      <div class="part">
+        <div class="part-label">(b) Agile vs Waterfall <span class="marks-tag">2 Marks</span></div>
+        <div class="tbl-wrap"><table>
+          <tr><th>Feature</th><th>Waterfall</th><th>Agile</th></tr>
+          <tr><td>Approach</td><td>Sequential, linear</td><td>Iterative, incremental</td></tr>
+          <tr><td>Flexibility</td><td>Rigid — changes costly</td><td>Highly flexible</td></tr>
+          <tr><td>Client Involvement</td><td>Start and end only</td><td>Continuous throughout</td></tr>
+          <tr><td>Delivery</td><td>Single delivery at end</td><td>Frequent small releases (sprints)</td></tr>
+          <tr><td>Best For</td><td>Fixed, well-defined requirements</td><td>Evolving or unclear requirements</td></tr>
+        </table></div>
+        <div class="highlight green"><strong>Recommendation:</strong> For a Food Delivery System — <strong>Agile</strong> is preferred. User needs evolve frequently (new payment methods, features), and rapid deployment in a competitive market is critical.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="q-card">
+    <div class="q-header" onclick="toggle(this)">
+      <span class="q-num">Q2–Q6</span>
+      <span class="q-title">School Attendance / Hospital Appointment / Library / E-Commerce / Hospital Systems</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="q-body">
+      <div class="part">
+        <div class="part-label">All Systems Follow the Same 4-Phase Framework</div>
+        <p>The four SDLC phases — Requirement Analysis, Design, Development, and Testing — apply universally. Adapt the context to the system described in each question:</p>
+        <div class="tbl-wrap"><table>
+          <tr><th>System</th><th>SRS Focus</th><th>Design Focus</th><th>Dev Focus</th><th>Testing Focus</th></tr>
+          <tr><td>Attendance System</td><td>Marking, reporting, parent alerts</td><td>Timetable DB schema</td><td>Biometric/QR integration</td><td>Accuracy of attendance logs</td></tr>
+          <tr><td>Appointment System</td><td>Doctor availability, booking rules</td><td>Calendar UI, notification system</td><td>Booking engine, SMS alerts</td><td>Booking conflicts, edge cases</td></tr>
+          <tr><td>Library System</td><td>Search, issue, return, fines</td><td>Catalogue DB, user accounts</td><td>Search algorithm, borrowing logic</td><td>Fine calculation accuracy</td></tr>
+          <tr><td>E-Commerce Site</td><td>Product listing, cart, checkout</td><td>Payment gateway integration</td><td>Shopping cart, payment API</td><td>Security, load testing</td></tr>
+        </table></div>
+      </div>
+      <div class="part">
+        <div class="part-label">When to Choose Agile over Waterfall</div>
+        <ul class="styled">
+          <li>Requirements are unclear or expected to change frequently</li>
+          <li>Client wants regular feedback and early working prototypes</li>
+          <li>Project demands fast, iterative deployment in competitive markets</li>
+          <li>Development team is cross-functional and self-organizing</li>
+          <li>Risk of major scope changes is high</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════ CLOUD ═══════════════════════════════════ -->
+<div id="cloud" class="section">
+  <div class="section-header">
+    <div class="section-icon" style="background:rgba(245,158,11,0.12)">☁</div>
+    <div>
+      <h2>Cloud Computing</h2>
+      <p>Advantages · IaaS · PaaS · SaaS · Service Models</p>
+    </div>
+  </div>
+
+  <div class="q-card open">
+    <div class="q-header" onclick="toggle(this)">
+      <span class="q-num">Q1–Q6</span>
+      <span class="q-title">Startup / Educational Platform / Accounting Firm / Migration — Cloud benefits &amp; service models</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="q-body">
+      <div class="part">
+        <div class="part-label">Three Advantages of Cloud Computing</div>
+        <div class="tbl-wrap"><table>
+          <tr><th>Advantage</th><th>Explanation</th><th>Example</th></tr>
+          <tr><td><span class="badge badge-blue">Cost Efficiency</span></td><td>No upfront hardware investment; pay-as-you-go model</td><td>Startup pays only for server hours used</td></tr>
+          <tr><td><span class="badge badge-green">Scalability</span></td><td>Resources scale up or down instantly based on demand</td><td>Online store scales up during Black Friday</td></tr>
+          <tr><td><span class="badge badge-amber">Accessibility</span></td><td>Access data and applications from anywhere with internet</td><td>Students access courses from any country</td></tr>
+          <tr><td><span class="badge badge-purple">Disaster Recovery</span></td><td>Automatic backups ensure business continuity</td><td>Hospital data recovered after ransomware</td></tr>
+          <tr><td><span class="badge badge-red">Auto Updates</span></td><td>Provider manages software &amp; security patches</td><td>Accounting firm always has latest security</td></tr>
+        </table></div>
+      </div>
+      <div class="part">
+        <div class="part-label">IaaS vs PaaS vs SaaS</div>
+        <div class="tbl-wrap"><table>
+          <tr><th>Model</th><th>Full Form</th><th>What It Provides</th><th>User Manages</th><th>Example</th></tr>
+          <tr><td><span class="badge badge-blue">IaaS</span></td><td>Infrastructure as a Service</td><td>Virtual machines, storage, networking</td><td>OS, applications, data</td><td>Amazon EC2, Azure VMs</td></tr>
+          <tr><td><span class="badge badge-purple">PaaS</span></td><td>Platform as a Service</td><td>Dev environment, runtime, middleware</td><td>Applications and data only</td><td>Google App Engine, Heroku</td></tr>
+          <tr><td><span class="badge badge-green">SaaS</span></td><td>Software as a Service</td><td>Fully ready-to-use applications</td><td>Nothing — just uses the app</td><td>Microsoft 365, Gmail, Zoom</td></tr>
+        </table></div>
+        <div class="highlight amber">
+          <strong>Memory Aid:</strong><br>
+          IaaS = "I build everything on rented land." &nbsp;|&nbsp;
+          PaaS = "I build the app on a ready platform." &nbsp;|&nbsp;
+          SaaS = "I just use the finished product."
+        </div>
+      </div>
+      <div class="part">
+        <div class="part-label">Q5 — AWS EC2 vs Google App Engine vs Microsoft 365</div>
+        <div class="tbl-wrap"><table>
+          <tr><th>Service</th><th>Model</th><th>Who Uses</th><th>What It Does</th></tr>
+          <tr><td>AWS EC2</td><td>IaaS</td><td>System Administrators</td><td>Provides raw virtual servers; user installs OS and software</td></tr>
+          <tr><td>Google App Engine</td><td>PaaS</td><td>Developers</td><td>Platform to deploy web apps without managing servers</td></tr>
+          <tr><td>Microsoft 365</td><td>SaaS</td><td>End Users</td><td>Ready-to-use Office apps (Word, Excel, Teams) via browser</td></tr>
+        </table></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════ VIRTUALIZATION ═══════════════════════════════════ -->
+<div id="virt" class="section">
+  <div class="section-header">
+    <div class="section-icon" style="background:rgba(239,68,68,0.12)">💻</div>
+    <div>
+      <h2>Virtualization &amp; Cybersecurity</h2>
+      <p>VMs · Hypervisors · CIA Triad · Security Controls</p>
+    </div>
+  </div>
+
+  <div class="q-card open">
+    <div class="q-header" onclick="toggle(this)">
+      <span class="q-num">Q1–Q5</span>
+      <span class="q-title">Virtualization concepts, hypervisors, and CIA Triad with examples</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="q-body">
+      <div class="part">
+        <div class="part-label">What is Virtualization?</div>
+        <p><strong>Virtualization</strong> is the process of creating virtual (software-based) versions of physical resources such as servers, storage, or operating systems using a <strong>hypervisor</strong>.</p>
+        <div class="highlight">A single physical server runs a hypervisor (e.g., VMware or VirtualBox) which creates multiple Virtual Machines (VMs). Each VM has its own OS — one runs Windows 10, another Ubuntu, another macOS — all simultaneously, sharing the server's CPU and RAM.</div>
+      </div>
+      <div class="part">
+        <div class="part-label">Role of a Hypervisor</div>
+        <p>A <strong>hypervisor</strong> (also called a Virtual Machine Monitor) is software that sits between the hardware and virtual machines. It allocates CPU, RAM, and storage to each VM, ensures VMs are isolated from each other, and manages resource sharing efficiently.</p>
+        <div class="tbl-wrap"><table>
+          <tr><th>Type</th><th>Description</th><th>Example</th></tr>
+          <tr><td>Type 1 (Bare Metal)</td><td>Runs directly on hardware — no host OS needed</td><td>VMware ESXi, Microsoft Hyper-V</td></tr>
+          <tr><td>Type 2 (Hosted)</td><td>Runs on top of an existing OS</td><td>VirtualBox, VMware Workstation</td></tr>
+        </table></div>
+      </div>
+      <div class="part">
+        <div class="part-label">Benefits of Virtualization</div>
+        <ul class="styled">
+          <li><strong>Cost Reduction:</strong> One powerful server replaces 10+ physical machines — saves electricity, cooling, and maintenance costs</li>
+          <li><strong>Hardware Utilization:</strong> Servers often idle at 10–15% without virtualization; VMs maximize usage</li>
+          <li><strong>Isolation for Testing:</strong> Snapshots allow reverting to a clean state after each test</li>
+          <li><strong>Rapid Provisioning:</strong> New VMs are created in minutes instead of days</li>
+        </ul>
+      </div>
+      <div class="part">
+        <div class="part-label">The CIA Triad</div>
+        <div class="tbl-wrap"><table>
+          <tr><th>Principle</th><th>Definition</th><th>Practical Example</th><th>Security Control</th></tr>
+          <tr>
+            <td><span class="badge badge-blue">Confidentiality</span></td>
+            <td>Data accessible only to authorized users</td>
+            <td>Patient medical records visible only to treating doctors</td>
+            <td>Encryption, passwords, role-based access control</td>
+          </tr>
+          <tr>
+            <td><span class="badge badge-green">Integrity</span></td>
+            <td>Data is accurate and unaltered</td>
+            <td>Bank transaction amounts cannot be tampered during transfer</td>
+            <td>Hashing (SHA-256), digital signatures, audit logs</td>
+          </tr>
+          <tr>
+            <td><span class="badge badge-amber">Availability</span></td>
+            <td>Systems and data accessible when needed</td>
+            <td>Hospital systems must be online 24/7 for emergencies</td>
+            <td>Redundancy, backups, DDoS protection, load balancing</td>
+          </tr>
+        </table></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════ AR VR ═══════════════════════════════════ -->
+<div id="arvr" class="section">
+  <div class="section-header">
+    <div class="section-icon" style="background:rgba(124,58,237,0.12)">🥽</div>
+    <div>
+      <h2>Augmented Reality &amp; Virtual Reality</h2>
+      <p>Differences · Applications · Use Case Recommendations</p>
+    </div>
+  </div>
+
+  <div class="q-card open">
+    <div class="q-header" onclick="toggle(this)">
+      <span class="q-num">Q1–Q6</span>
+      <span class="q-title">AR vs VR differences, applications, and use-case recommendations</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="q-body">
+      <div class="part">
+        <div class="part-label">Key Differences — AR vs VR</div>
+        <div class="tbl-wrap"><table>
+          <tr><th>Feature</th><th>Augmented Reality (AR)</th><th>Virtual Reality (VR)</th></tr>
+          <tr><td>Environment</td><td>Overlays digital content onto the <strong>real world</strong></td><td>Creates a fully <strong>immersive artificial</strong> environment</td></tr>
+          <tr><td>Hardware</td><td>Smartphone, tablet, AR glasses (HoloLens)</td><td>VR headset required (Meta Quest, HTC Vive)</td></tr>
+          <tr><td>User Awareness</td><td>Remains aware of real surroundings</td><td>Completely isolated from reality</td></tr>
+          <tr><td>Cost</td><td>Generally less expensive</td><td>Higher cost due to specialized hardware</td></tr>
+          <tr><td>Interaction</td><td>Both real and virtual elements</td><td>Only within virtual environment</td></tr>
+        </table></div>
+      </div>
+      <div class="part">
+        <div class="part-label">Applications</div>
+        <div class="tbl-wrap"><table>
+          <tr><th>AR Applications</th><th>VR Applications</th></tr>
+          <tr><td>Navigation (Google Maps Live View)</td><td>Virtual museum tours</td></tr>
+          <tr><td>Interior design (IKEA Place app)</td><td>Flight simulation training</td></tr>
+          <tr><td>Medical surgery guidance overlays</td><td>Therapy for phobias / PTSD</td></tr>
+          <tr><td>Retail virtual try-on (clothing, glasses)</td><td>Architectural walkthroughs</td></tr>
+          <tr><td>Education — interactive 3D anatomy</td><td>Military / emergency response training</td></tr>
+          <tr><td>Gaming — Pokémon GO</td><td>VR gaming — Beat Saber</td></tr>
+        </table></div>
+      </div>
+      <div class="part">
+        <div class="part-label">Use Case Recommendations</div>
+        <div class="highlight green">
+          <strong>Interior Design Mobile App → AR</strong><br>
+          Users need to see virtual furniture overlaid in their <em>actual</em> room in real time. AR preserves the real-world context which is essential for making realistic placement decisions.
+        </div>
+        <div class="highlight purple">
+          <strong>Virtual Museum Experience → VR</strong><br>
+          Complete immersion creates the sensation of physically being present in the museum. VR delivers the full sensory experience needed to replicate walking through exhibit halls.
+        </div>
+        <div class="highlight amber">
+          <strong>Navigation App → AR</strong><br>
+          Users must see the real road while receiving directional overlays. VR would be dangerous and completely impractical for active navigation.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════ IoT ═══════════════════════════════════ -->
+<div id="iot" class="section">
+  <div class="section-header">
+    <div class="section-icon" style="background:rgba(16,185,129,0.12)">📡</div>
+    <div>
+      <h2>Internet of Things (IoT)</h2>
+      <p>4-Layer Architecture · Data Flow · Smart Systems</p>
+    </div>
+  </div>
+
+  <div class="highlight green" style="margin-bottom:24px">
+    <strong>4 IoT Layers:</strong> &nbsp;
+    <span class="badge badge-blue">Layer 1: Perception</span>
+    <span class="badge badge-purple">Layer 2: Network</span>
+    <span class="badge badge-amber">Layer 3: Processing</span>
+    <span class="badge badge-green">Layer 4: Application</span>
+  </div>
+
+  <div class="q-card open">
+    <div class="q-header" onclick="toggle(this)">
+      <span class="q-num">Q1</span>
+      <span class="q-title">Smart Healthcare System — 4-layer mapping &amp; data flow</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="q-body">
+      <div class="part">
+        <div class="part-label">(a) 4-Layer IoT Architecture Mapping <span class="marks-tag">3 Marks</span></div>
+        <div class="tbl-wrap"><table>
+          <tr><th>Layer</th><th>Function</th><th>Healthcare Component</th></tr>
+          <tr><td><span class="badge badge-blue">Perception</span></td><td>Collects real-world data via sensors</td><td>Wearable sensors — heart rate, temperature, blood pressure monitors</td></tr>
+          <tr><td><span class="badge badge-purple">Network</span></td><td>Transmits sensor data</td><td>Wi-Fi / 4G cellular transmitting readings to cloud servers</td></tr>
+          <tr><td><span class="badge badge-amber">Processing</span></td><td>Analyzes and filters data</td><td>Cloud server analyzes vitals, detects critical anomalies using algorithms</td></tr>
+          <tr><td><span class="badge badge-green">Application</span></td><td>End-user interface and actions</td><td>Doctor's dashboard &amp; real-time alert notification system</td></tr>
+        </table></div>
+      </div>
+      <div class="part">
+        <div class="part-label">(b) Data Flow — Sensor to Doctor's Dashboard <span class="marks-tag">2 Marks</span></div>
+        <div class="highlight">
+          <strong>Step 1:</strong> Wearable sensor detects abnormal heart rate (e.g., 140 bpm) →
+          <strong>Step 2:</strong> Data transmitted via 4G to cloud server →
+          <strong>Step 3:</strong> Processing layer identifies critical threshold breach using medical algorithms →
+          <strong>Step 4:</strong> Alert pushed instantly to doctor's mobile dashboard with patient ID and reading
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="q-card">
+    <div class="q-header" onclick="toggle(this)">
+      <span class="q-num">Q2</span>
+      <span class="q-title">Smart Agriculture System — Soil sensors &amp; automated irrigation</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="q-body">
+      <div class="part">
+        <div class="part-label">(a) Layer Classification</div>
+        <div class="tbl-wrap"><table>
+          <tr><th>Layer</th><th>Component</th></tr>
+          <tr><td><span class="badge badge-blue">Perception</span></td><td>Soil moisture sensors, temperature probes in the field</td></tr>
+          <tr><td><span class="badge badge-purple">Network</span></td><td>LoRaWAN / Wi-Fi transmitting sensor readings to cloud</td></tr>
+          <tr><td><span class="badge badge-amber">Processing</span></td><td>Cloud platform analyzes moisture levels against crop water requirements</td></tr>
+          <tr><td><span class="badge badge-green">Application</span></td><td>Automated irrigation valve trigger + farmer's mobile monitoring app</td></tr>
+        </table></div>
+      </div>
+      <div class="part">
+        <div class="part-label">(b) Data Flow</div>
+        <div class="highlight">Soil sensor reads low moisture → Data sent via LoRaWAN to cloud → Processing layer compares reading to crop threshold → Irrigation valve opens automatically AND farmer receives alert on app</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="q-card">
+    <div class="q-header" onclick="toggle(this)">
+      <span class="q-num">Q3 / Q4</span>
+      <span class="q-title">Smart Parking System — Sensor to driver notification</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="q-body">
+      <div class="part">
+        <div class="part-label">(a) 4-Layer Breakdown</div>
+        <div class="tbl-wrap"><table>
+          <tr><th>Layer</th><th>Component</th></tr>
+          <tr><td><span class="badge badge-blue">Perception</span></td><td>Ultrasonic / infrared sensors embedded in each parking bay</td></tr>
+          <tr><td><span class="badge badge-purple">Network</span></td><td>Wi-Fi / 4G transmitting occupancy status data</td></tr>
+          <tr><td><span class="badge badge-amber">Processing</span></td><td>Central server tracks availability and calculates nearest free space</td></tr>
+          <tr><td><span class="badge badge-green">Application</span></td><td>Driver's mobile app showing real-time vacant spots with navigation</td></tr>
+        </table></div>
+      </div>
+      <div class="part">
+        <div class="part-label">(b) Data Flow</div>
+        <div class="highlight">Sensor detects empty bay → Occupancy signal sent via Wi-Fi to server → Server updates parking availability map → Mobile app notifies driver of available space and optimal route</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="q-card">
+    <div class="q-header" onclick="toggle(this)">
+      <span class="q-num">Q6</span>
+      <span class="q-title">Smart Home System — Lighting &amp; temperature remote control</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="q-body">
+      <div class="part">
+        <div class="part-label">(a) Four IoT Layers</div>
+        <div class="tbl-wrap"><table>
+          <tr><th>Layer</th><th>Component</th></tr>
+          <tr><td><span class="badge badge-blue">Perception</span></td><td>Temperature sensors, light sensors, motion detectors, smart bulbs, smart thermostat</td></tr>
+          <tr><td><span class="badge badge-purple">Network</span></td><td>Home Wi-Fi / Zigbee / Bluetooth connecting devices to hub</td></tr>
+          <tr><td><span class="badge badge-amber">Processing</span></td><td>Smart home hub (e.g., Amazon Echo) processes commands and automation rules</td></tr>
+          <tr><td><span class="badge badge-green">Application</span></td><td>Mobile app (e.g., Google Home, Alexa) allowing remote control by homeowner</td></tr>
+        </table></div>
+      </div>
+      <div class="part">
+        <div class="part-label">(b) Data Journey</div>
+        <div class="highlight">Temperature sensor detects room at 28°C → Reading sent via Zigbee to smart hub → Hub compares to user's preferred setting (22°C) → Sends command to AC unit AND pushes notification to user's mobile app</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════ AI ETHICS ═══════════════════════════════════ -->
+<div id="ai" class="section">
+  <div class="section-header">
+    <div class="section-icon" style="background:rgba(239,68,68,0.12)">🤖</div>
+    <div>
+      <h2>AI Ethics &amp; Algorithmic Bias</h2>
+      <p>Sources of Bias · Requirement Analysis Prevention Strategies</p>
+    </div>
+  </div>
+
+  <div class="highlight" style="margin-bottom:24px">
+    <strong>Core Principle:</strong> If historical data encodes discrimination, the AI will automate that discrimination at scale. Prevention must begin at the <em>Requirements Stage</em>, not after deployment.
+  </div>
+
+  <div class="q-card open">
+    <div class="q-header" onclick="toggle(this)">
+      <span class="q-num">Q1</span>
+      <span class="q-title">Bank AI rejects loan applicants from certain neighborhoods — bias &amp; prevention</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="q-body">
+      <div class="part">
+        <div class="part-label">1. How Bias Developed <span class="marks-tag">2 Marks</span></div>
+        <p>The AI was trained on historical loan data where applicants from certain postcodes had higher default rates — often due to <strong>socioeconomic factors</strong> (unemployment, poor infrastructure), not individual creditworthiness.</p>
+        <p>The model learned to associate <em>location</em> with <em>risk</em>, discriminating against entire communities rather than evaluating individual financial behavior. This is called <strong>Historical Bias</strong> — the data reflected past inequality, and the AI amplified it.</p>
+      </div>
+      <div class="part">
+        <div class="part-label">2. How Requirement Analysis Can Reduce This Bias <span class="marks-tag">3 Marks</span></div>
+        <div class="tbl-wrap"><table>
+          <tr><th>RA Activity</th><th>How It Prevents Bias</th></tr>
+          <tr><td><strong>Define Fairness Criteria</strong></td><td>Explicitly require that decisions must not correlate with zip code, race, or neighbourhood</td></tr>
+          <tr><td><strong>Stakeholder Consultation</strong></td><td>Include community representatives and ethicists — not just engineers — in requirements gathering</td></tr>
+          <tr><td><strong>Data Auditing Requirements</strong></td><td>Specify that training data must be reviewed for demographic imbalances before model training begins</td></tr>
+          <tr><td><strong>Bias Testing Requirements</strong></td><td>Mandate testing across different demographic groups to verify equal performance and rejection rates</td></tr>
+          <tr><td><strong>Legal Compliance Check</strong></td><td>Ensure requirements align with anti-discrimination laws (e.g., Equal Credit Opportunity Act)</td></tr>
+          <tr><td><strong>Replace Biased Proxies</strong></td><td>Replace location-based features with fair, relevant predictors: debt-to-income ratio, employment history</td></tr>
+        </table></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="q-card">
+    <div class="q-header" onclick="toggle(this)">
+      <span class="q-num">Q2</span>
+      <span class="q-title">University admission AI favors students from certain schools</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="q-body">
+      <div class="part">
+        <div class="part-label">1. Source of Algorithmic Bias</div>
+        <p>Historical admission data was skewed toward students from elite schools. The model interpreted <strong>school name</strong> as a predictor of academic success, ignoring equally capable students from underrepresented institutions.</p>
+        <p>This is <strong>Representation Bias</strong> — certain groups (elite school graduates) were overrepresented in training data, making the model biased in their favor.</p>
+      </div>
+      <div class="part">
+        <div class="part-label">2. SDLC Requirement Analysis to Address This</div>
+        <ul class="styled">
+          <li><strong>Bias Audit:</strong> Require a demographic breakdown of historical admission data before use</li>
+          <li><strong>Fairness Metrics:</strong> Define measurable equality targets (e.g., equal acceptance rates across school types)</li>
+          <li><strong>Feature Selection Rules:</strong> Exclude school name as a feature; focus on GPA, essay scores, extracurriculars</li>
+          <li><strong>Diverse Stakeholder Input:</strong> Include underrepresented community voices in defining admission criteria</li>
+          <li><strong>Transparency Requirement:</strong> System must explain rejection reasons in auditable, non-discriminatory terms</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="q-card">
+    <div class="q-header" onclick="toggle(this)">
+      <span class="q-num">Q3</span>
+      <span class="q-title">Company AI for promotions — consistently favors older employees</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="q-body">
+      <div class="part">
+        <div class="part-label">1. How Algorithmic Bias Occurred</div>
+        <p>Past promotion records were dominated by senior (older) employees because promotions historically required long tenure. The model incorrectly associated <strong>age/seniority</strong> with promotion-worthiness.</p>
+        <p>This is <strong>Label Bias</strong> — the labels (promoted / not promoted) in training data encoded institutional favoritism toward seniority, causing younger high-performing staff to be systematically disadvantaged.</p>
+      </div>
+      <div class="part">
+        <div class="part-label">2. Requirement Analysis Activities to Prevent This</div>
+        <ul class="styled">
+          <li><strong>Define Non-Discriminatory Criteria:</strong> Require promotion decisions be based only on performance scores, project outcomes, and competency assessments — not tenure or age</li>
+          <li><strong>Historical Data Review:</strong> Audit past promotion data for age distribution imbalances before using it as training data</li>
+          <li><strong>Counterfactual Fairness Requirement:</strong> Mandate that changing only an employee's age should not alter the model's recommendation</li>
+          <li><strong>HR &amp; Legal Stakeholder Review:</strong> Include HR and legal teams in requirements to ensure compliance with age discrimination laws</li>
+          <li><strong>Performance Weighting:</strong> Require that recent performance metrics be weighted more heavily than years of service</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="q-card">
+    <div class="q-header" onclick="toggle(this)">
+      <span class="q-num">Q5–Q6</span>
+      <span class="q-title">AI hiring tool &amp; facial recognition — training data bias &amp; fairness criteria</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="q-body">
+      <div class="part">
+        <div class="part-label">Q5 — AI Hiring Tool Favoring Specific Universities</div>
+        <p><strong>Why Bias Occurs:</strong> If most successful past hires came from specific universities, the model treats university name as a success predictor. This is <strong>Sampling Bias</strong> — the historical hiring pool was not diverse enough to represent all capable candidates.</p>
+      </div>
+      <div class="part">
+        <div class="part-label">Q6 — Facial Recognition Performing Poorly on Certain Demographics</div>
+        <p><strong>How Training Data Creates Bias:</strong> If the training dataset contained predominantly images of one demographic group (e.g., lighter-skinned individuals), the model performs well on that group and poorly on underrepresented ones. The model has learned features specific to the majority group, making it less accurate — or more likely to misidentify — minority groups.</p>
+        <div class="highlight amber">
+          <strong>Fairness Criteria to Recommend Before Development:</strong><br>
+          1. Training dataset must include balanced representation across all demographic groups<br>
+          2. Minimum accuracy threshold must be met for each demographic group individually<br>
+          3. System must be tested by independent third parties on diverse test sets<br>
+          4. Deployment must be restricted in high-stakes contexts (law enforcement, hiring) until bias audits pass<br>
+          5. Ongoing monitoring must flag accuracy degradation across demographic cohorts
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</main>
+
+<footer>
+  ICT Comprehensive Q&amp;A Guide &nbsp;·&nbsp; Professional Instructor's Model Answers &nbsp;·&nbsp; All Rights Reserved
+</footer>
+
+<script>
+  function show(id, btn) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    btn.classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function toggle(header) {
+    const card = header.parentElement;
+    card.classList.toggle('open');
+  }
+</script>
+</body>
+</html>
